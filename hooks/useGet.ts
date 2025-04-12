@@ -1,14 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-import type { ApiSuccessResponse } from "@/types/apiResponse";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
+// Le type des options pour GET
 type GetOptions<TData> = {
   endpoint: string;
   queryKey: string;
   where?: Record<string, number | string>;
-  enabled?: boolean; // Permet d'activer ou désactiver la requête
+  enabled?: boolean;
 };
 
-export const fetchResources = async <TData>({ endpoint, where }: GetOptions<TData>): Promise<ApiSuccessResponse<TData>> => {
+export const fetchResources = async <TData>({
+  endpoint,
+  where,
+}: GetOptions<TData>): Promise<TData> => {
   let url = endpoint;
   if (where) {
     const query = new URLSearchParams(where as Record<string, string>).toString();
@@ -19,16 +22,22 @@ export const fetchResources = async <TData>({ endpoint, where }: GetOptions<TDat
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
-  return response.json();
+
+  if (!response.ok) {
+    throw new Error(`Erreur HTTP: ${response.status}`);
+  }
+
+  const data: TData = await response.json();
+  return data;
 };
 
-export const useGet = <TData>(options: GetOptions<TData>) => {
-  return useQuery({
+export const useGet = <TData>(options: GetOptions<TData>): UseQueryResult<TData> => {
+  return useQuery<TData>({
     queryKey: [options.queryKey, options.where],
-    queryFn: () => fetchResources(options),
-    staleTime: 1000 * 60, // 1 min avant de marquer les données comme "obsolètes"
+    queryFn: () => fetchResources<TData>(options),
+    staleTime: 1000 * 60,
     refetchOnWindowFocus: true,
-    retry: 3, // 3 tentatives en cas d'échec
-    enabled: options.enabled ?? true, // Permet de désactiver la requête conditionnellement
+    retry: 3,
+    enabled: options.enabled ?? true,
   });
 };
