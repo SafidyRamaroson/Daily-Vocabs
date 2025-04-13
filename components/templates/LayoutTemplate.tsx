@@ -10,7 +10,7 @@ function LayoutTemplate({ children }: LayoutProps) {
         setSelectedOption(value);
     }
     return (
-        <main className="flex flex-col">
+        <main className="flex flex-col min-h-screen">
             <AppHeader
                 states={statesData}
                 selectedOption={selectedOption}
