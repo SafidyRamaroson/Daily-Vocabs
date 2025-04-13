@@ -6,10 +6,14 @@ import { Sun, Moon } from "lucide-react";
 
 type Props = {
     states: State[],
+    selectedOption?: string,
+    onChange?: (value: string) => void
 }
 
 function AppHeader({
-    states
+    states,
+    selectedOption,
+    onChange
 }: Props) {
 
     return (
@@ -20,7 +24,7 @@ function AppHeader({
                     <Sun className="text-gray-400 cursor-pointer" />
                     <Moon className="text-gray-400 cursor-pointer" />
                 </div>
-                <SwitcherLanguage states={states} />
+                <SwitcherLanguage states={states} selectedOption={selectedOption} onChange={onChange} />
             </div>
         </div>
     )

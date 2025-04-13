@@ -8,6 +8,6 @@ export const statesData: State[] = [{
     code: "840",
     acronym: "EN"
 }, {
-    code: "ger",
+    code: "276",
     acronym: "GER"
 }]

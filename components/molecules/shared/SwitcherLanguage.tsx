@@ -9,10 +9,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
 import Flag from 'react-world-flags';
 
 type Props = {
-    states: State[]
+    states: State[],
+    selectedOption?: string,
+    onChange?: (value: string) => void
 }
 
 type State = {
@@ -20,14 +23,18 @@ type State = {
     acronym: string
 }
 
-function SwitcherLanguage({ states }: Props) {
+function SwitcherLanguage({ states, selectedOption,onChange }: Props) {
     return (
         <div>
-            <Select>
+            <Select
+                onValueChange={onChange}
+                defaultValue={selectedOption}
+                value={selectedOption}
+            >
                 <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Langues"/>
+                    <SelectValue placeholder="Langues" />
                 </SelectTrigger>
-                <SelectContent defaultValue={states[0].code}>
+                <SelectContent>
                     {
                         states.map((state) => (
                             <SelectItem value={state.acronym} key={state.code}>
